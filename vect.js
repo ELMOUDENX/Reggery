@@ -2,42 +2,12 @@
 function fromscreen(x,y){
 	return (mouseX-400,300-mouseY)
 }
-class Vect{
-	constructor(x=0,y=0){
-		this.x=x
-		this.y=y
-
-	}
-	neg(){
-		return new Vect(-this.x,-this.y)
-	}
-	add(v){
-		return  new Vect(this.x+v.x,this.y+v.y)
-	}
-	
-	min(v){
-		return  new Vect(this.x-v.x,this.y-v.y)
-	}
-	mul(v){
-		return new Vect(this.x*v,this.y*v)
-	}
-	abs(){
-		return ((this.x)**2+(this.y)**2)**0.5
-	}
-	dis(o){
-		return ((this.x-o.x)**2+(this.y-o.y)**2)**0.5
-	}
-
-    get point(){
-        return new Point(this.x,this.y)
-    }
-}
 
 
 
 class Point{
 	constructor(x=0,y=0){
-		this.p=new Vect(x,y)
+		this.p=new p5.Vector(x,y)
 		this.fix=false
 		this.selected=false
 	}
@@ -47,7 +17,9 @@ class Point{
 		if(!this.fix) this.p = this.p.add(v)	
 		
 	}
+	dist(){
 
+	}
     setp(v){
 
 		if(!this.fix) this.p = v
@@ -57,7 +29,7 @@ class Point{
 
 	}
 	update(){
-		if(!this.fix && !this.selected && grav) this.p = this.p.add(new Vect(0,-1))
+		if(!this.fix && !this.selected && world.gravity) this.p = this.p.add(new p5.Vector(0,-1))
 	}
 	show(){
 		fill(256)
@@ -71,7 +43,7 @@ class Point{
 class Rot extends Point{
 	constructor(x=0,y=0,r=36){
 		super(x+r,y)
-		this.c=new Vect(x,y)
+		this.c=new p5.Vector(x,y)
 		this.fix=true
 		this.selected=false
 		this.r=r
@@ -79,12 +51,12 @@ class Rot extends Point{
 	}
 	chng(){
 		if (keyIsDown(88)) {
-			this.r=this.c.dis(this.p)
+			this.r=this.c.dist(this.p)
 		}
 	}
 	update(){
 
-		this.p=new Vect(this.c.x+this.r*cos(t),this.c.y+this.r*sin(t))
+		this.p=new p5.Vector(this.c.x+this.r*cos(t),this.c.y+this.r*sin(t))
 	}
 	show(){
 		
@@ -102,18 +74,18 @@ class Rig{
 	constructor(a=new Point(),b=new Point()){
 		this.A=a
 		this.B=b
-		this.l=this.A.p.dis(this.B.p)
+		this.l=this.A.p.dist(this.B.p)
 
 	}
 
 	update(){
 		if (keyIsDown(88)) {
-			this.l=this.A.p.dis(this.B.p)
+			this.l=this.A.p.dist(this.B.p)
 		}
-		let d=this.B.p.min(this.A.p)
-		let v=d.mul(0.8*(1-this.l/d.abs()))
+		let d=this.B.p.add(-this.A.p)
+		let v=d.mult(0.8*(1-this.l/d.mag()))
 		this.A.set(v)
-		this.B.set(v.neg())
+		this.B.set(v.mult(-1))
 
 	}
 
@@ -133,21 +105,21 @@ class Barr extends Rig{
 		this.B=b
         this.C=c
 
-		this.l = this.A.p.dis(this.B.p)
-		this.l2 = this.C.p.dis(this.A.p)
+		this.l = this.A.p.dist(this.B.p)
+		this.l2 = this.C.p.dist(this.A.p)
        this.lam=2
 
 	}
 
 	update(){
 		if (keyIsDown(88)) {
-			this.l=this.A.p.dis(this.B.p)
+			this.l=this.A.p.dist(this.B.p)
 		}
-		let d=this.B.p.min(this.A.p)
-		let v=d.mul(0.8*(1-this.l/d.abs()))
+		let d=this.B.p.add(-this.A.p)
+		let v=d.mult(0.8*(1-this.l/d.mag()))
 		this.A.set(v)
-		this.B.set(v.neg())
-        this.C.setp(this.A.p.add(this.B.p.min(this.A.p).mul(this.lam)))
+		this.B.set(v.multt(-1))
+        this.C.setp(this.A.p.add(this.B.p.add(-this.A.p).mult(this.lam)))
 
 	}
 
