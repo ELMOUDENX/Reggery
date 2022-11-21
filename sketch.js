@@ -1,12 +1,12 @@
-R=[],overBox=true //,bx=400,by=300
+let overBox=true //,bx=400,by=300
 let t=0,world
 
 
 class World{
     constructor(){
         this.SHOWGRID=true
-        this.SHOWMINIGRID=true
-
+        this.SHOWMINIGRID=true	
+		this.R=[]
 		this.play=false
 		this.barrs=[]
 		this.gravity=false
@@ -43,7 +43,7 @@ function draw()
 {	
 	background(44)
 
-	R.forEach(r => {
+	world.R.forEach(r => {
 			r.update()
 			r.show()
 	});
@@ -77,12 +77,12 @@ function mousePressed() {
 			{
 				if(keyIsDown(66) )
 				{	let a=world.barrs[world.barrs.length-2],b=world.barrs[world.barrs.length-1]
-					world.points.push(a.p.add(b.p.min(a.p).mul(2)).point)
+					world.points.push(p5.Vector.add(a.p,p5.Vector.mul(p5.Vector.sub(b.p,a.p),2)).point)
 					
-					R.push(new Barr(a,b ,world.points[world.points.length-1]))
+					world.R.push(new Barr(a,b ,world.points[world.points.length-1]))
 				}
 				else
-				{R.push(new Rig(world.barrs[world.barrs.length-2],world.barrs[world.barrs.length-1] ))}
+				{world.R.push(new Rig(world.barrs[world.barrs.length-2],world.barrs[world.barrs.length-1] ))}
 			}
 		}
 		return 

@@ -3,8 +3,6 @@ function fromscreen(x,y){
 	return (mouseX-400,300-mouseY)
 }
 
-
-
 class Point{
 	constructor(x=0,y=0){
 		this.p=new p5.Vector(x,y)
@@ -14,7 +12,7 @@ class Point{
     
 	set(v){
 
-		if(!this.fix) this.p = this.p.add(v)	
+		if(!this.fix) this.p.add(v)	
 		
 	}
 	dist(){
@@ -29,7 +27,7 @@ class Point{
 
 	}
 	update(){
-		if(!this.fix && !this.selected && world.gravity) this.p = this.p.add(new p5.Vector(0,-1))
+		if(!this.fix && !this.selected && world.gravity) this.p.add(new p5.Vector(0,-1))
 	}
 	show(){
 		fill(256)
@@ -82,8 +80,8 @@ class Rig{
 		if (keyIsDown(88)) {
 			this.l=this.A.p.dist(this.B.p)
 		}
-		let d=this.B.p.add(-this.A.p)
-		let v=d.mult(0.8*(1-this.l/d.mag()))
+		let d=p5.Vector.add(this.B.p,-this.A.p)
+		let v=p5.Vector.mult(d,0.8*(1-this.l/d.mag()))
 		this.A.set(v)
 		this.B.set(v.mult(-1))
 
@@ -115,11 +113,14 @@ class Barr extends Rig{
 		if (keyIsDown(88)) {
 			this.l=this.A.p.dist(this.B.p)
 		}
-		let d=this.B.p.add(-this.A.p)
-		let v=d.mult(0.8*(1-this.l/d.mag()))
+		let d=p5.Vector.add(this.B.p,-this.A.p)
+		let v=p5.Vector.mult(d,0.8*(1-this.l/d.mag()))
 		this.A.set(v)
-		this.B.set(v.multt(-1))
-        this.C.setp(this.A.p.add(this.B.p.add(-this.A.p).mult(this.lam)))
+		v.mult(-1)
+		this.B.set(v)
+
+
+        this.C.setp(p5.Vector.add(this.A.p,p5.Vector.mult(p5.Vector.add(this.B.p,-this.A.p),this.lam)))
 
 	}
 
