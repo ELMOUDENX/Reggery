@@ -8,7 +8,7 @@ class World{
         this.SHOWMINIGRID=true	
 		this.R=[]
 		this.play=false
-		this.barrs=[]
+		this.nodesList=[]
 		this.gravity=false
 
         this.SHOWAXIS=true
@@ -67,27 +67,27 @@ function mousePressed() {
 
 			world.points.forEach(e => {
 				if( e.p.dist(new p5.Vector(mouseX-400,300-mouseY))<12){
-					//if(e!==world.barrs[world.barrs.length-1])
-					world.barrs.push(e)
+					//if(e!==world.nodesList[world.nodesList.length-1])
+					world.nodesList.push(e)
 				}
 			});		
 		
-		if(world.barrs.length>=2){
-			if( world.barrs[world.barrs.length-2]!==world.barrs[world.barrs.length-1] )
+		if(world.nodesList.length>=2){
+			if( world.nodesList[world.nodesList.length-2]!==world.nodesList[world.nodesList.length-1] )
 			{
 				if(keyIsDown(66) )
-				{	let a=world.barrs[world.barrs.length-2],b=world.barrs[world.barrs.length-1]
+				{	let a=world.nodesList[world.nodesList.length-2],b=world.nodesList[world.nodesList.length-1]
 					world.points.push(p5.Vector.add(a.p,p5.Vector.mul(p5.Vector.sub(b.p,a.p),2)).point)
 					
 					world.R.push(new Barr(a,b ,world.points[world.points.length-1]))
 				}
 				else
-				{world.R.push(new Rig(world.barrs[world.barrs.length-2],world.barrs[world.barrs.length-1] ))}
+				{world.R.push(new Rig(world.nodesList[world.nodesList.length-2],world.nodesList[world.nodesList.length-1] ))}
 			}
 		}
 		return 
 	}else{
-		world.barrs=[]
+		world.nodesList=[]
 	}
 	
 	if(keyIsDown(CONTROL)){

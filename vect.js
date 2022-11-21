@@ -80,10 +80,11 @@ class Rig{
 		if (keyIsDown(88)) {
 			this.l=this.A.p.dist(this.B.p)
 		}
-		let d=p5.Vector.add(this.B.p,-this.A.p)
+		let d=p5.Vector.sub(this.B.p,this.A.p)
 		let v=p5.Vector.mult(d,0.8*(1-this.l/d.mag()))
 		this.A.set(v)
-		this.B.set(v.mult(-1))
+		v.mult(-1)
+		this.B.set(v)
 
 	}
 
